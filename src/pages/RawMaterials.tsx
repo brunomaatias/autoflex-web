@@ -1,5 +1,95 @@
-export default function Rawmaterials() {
+import { useEffect, useState } from "react"; 
+import { RawMaterialsForm } from "../components/RawMaterialsForm";
+import type { RawMaterial } from "../types/RawMaterial"; 
+import { getRawMaterials } from "../services/rawMaterialService";
+
+export default function RawMaterials() {
+    const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [showForm, setShowForm] = useState(false);
+
+    useEffect(() => {
+        fetchRawMaterials();
+    }, []);
+
+    const fetchRawMaterials = async () => {
+        try {
+            const data = await getRawMaterials();
+            setRawMaterials(data);
+        } catch (err) {
+            setError("Error on loading raw materials. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return <p className="text-gray-600 text-center">Loading...</p>;
+    }
+
+    if (error) {
+        return <p className="text-red-500 text-center">{error}</p>;
+    }
+
     return (
-        <h1>Raw Materials Page</h1>
-    )
+        <div className="bg-white shadow-md rounded-lg overflow-hidden p-6">
+            {showForm ? (
+                <div>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl font-bold mb-4">Create New Raw Material</h2>
+                        <button
+                            onClick={() => setShowForm(!showForm)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                            {showForm ? "Close" : "New"}
+                        </button>
+                    </div>
+                    <RawMaterialsForm />
+                </div>
+            ) : (
+                <div>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold">Raw Materials</h2>
+
+                        <button
+                            onClick={() => setShowForm(!showForm)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            {showForm ? "Close" : "New"}
+                        </button>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+                        <table className="min-w-full text-center">
+                            <thead className="bg-blue-600 text-white">
+                                <tr>
+                                    <th className="px-4 py-3 text-center">Code</th>
+                                    <th className="px-4 py-3 text-center">Name</th>
+                                    <th className="px-4 py-3 text-center">Stock Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rawMaterials.map((rawMaterial) => (
+                                    <tr
+                                        key={rawMaterial.code}
+                                        className="border-b hover:bg-gray-50 transition">
+                                        <td className="px-4 py-3">{rawMaterial.code}</td>
+                                        <td className="px-4 py-3">{rawMaterial.name}</td>
+                                        <td className="px-4 py-3 font-medium">
+                                            {rawMaterial.stockQuantity}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {rawMaterials.length === 0 && (
+                                    <tr>
+                                        <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
+                                            No data available
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
