@@ -25,7 +25,7 @@ export default function Products() {
     };
 
     if (loading) {
-        return <p className="text-gray-600 text-center">Carregando...</p>;
+        return <p className="text-gray-600 text-center">Loading...</p>;
     }
 
     if (error) {
@@ -41,7 +41,7 @@ export default function Products() {
                         <button
                             onClick={() => setShowForm(!showForm)}
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
-                            {showForm ? "Close" : "New Product"}
+                            {showForm ? "Close" : "New"}
                         </button>
                     </div>
                     <ProductForm />
@@ -54,30 +54,36 @@ export default function Products() {
                         <button
                             onClick={() => setShowForm(!showForm)}
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                            {showForm ? "Close" : "New Product"}
+                            {showForm ? "Close" : "New"}
                         </button>
                     </div>
                     <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
                         <table className="min-w-full">
                             <thead className="bg-blue-600 text-white">
                                 <tr>
-                                    <th className="px-4 py-3 text-left">Code</th>
-                                    <th className="px-4 py-3 text-left">Name</th>
-                                    <th className="px-4 py-3 text-left">Price</th>
+                                    <th className="px-4 py-3 text-center">Code</th>
+                                    <th className="px-4 py-3 text-center">Name</th>
+                                    <th className="px-4 py-3 text-center">Price</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {products.map((product) => (
-                                    <tr
-                                        key={product.code}
-                                        className="border-b hover:bg-gray-50 transition">
-                                        <td className="px-4 py-3">{product.code}</td>
-                                        <td className="px-4 py-3">{product.name}</td>
-                                        <td className="px-4 py-3 font-medium text-green-600">
+                                    <tr key={product.code} className="border-b hover:bg-gray-50 transition">
+                                        <td className="px-4 py-3 text-center">{product.code}</td>
+                                        <td className="px-4 py-3 text-center">{product.name}</td>
+                                        <td className="px-4 py-3 font-medium text-green-600 text-center">
                                             $ {product.price}
                                         </td>
                                     </tr>
                                 ))}
+
+                                {products.length === 0 && (
+                                    <tr>
+                                        <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
+                                            No data available
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
