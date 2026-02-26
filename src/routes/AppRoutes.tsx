@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Products from "../pages/Products";
 import RawMaterials from "../pages/RawMaterials";
 import MainLayout from "../layouts/MainLayout";
+import ProductionPlan from "../pages/ProductionPlan";
 
 export default function AppRoutes() {
     return (
@@ -10,6 +11,7 @@ export default function AppRoutes() {
                 <Routes>
                     <Route path="/" element={<Products />} />
                     <Route path="/raw-materials" element={<RawMaterials />} />
+                    <Route path="/production-plans" element={<ProductionPlan />} />
                 </Routes>
             </MainLayout>
         </BrowserRouter>
