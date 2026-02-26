@@ -11,12 +11,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     const navItems = [
         { name: "Products", path: "/", icon: Package },
         { name: "Raw Materials", path: "/raw-materials", icon: Droplets },
-        { name: "Production", path: "/production", icon: Factory },
+        { name: "Production", path: "/production-plans", icon: Factory },
     ];
 
     return (
         <div className="min-h-screen flex flex-col bg-slate-100 font-sans">
-
             <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-40 shadow-sm">
                 <div className="flex items-center gap-2">
                     <div className="bg-blue-600 p-1.5 rounded-lg shadow-lg shadow-red-200">
@@ -46,9 +45,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
 
-                    <div className="p-6">
+                    <div className="p-4">
                         <div className="flex items-center justify-between mb-4">
-                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+                            <p className="text-xs font-semibold text-slate-700 uppercase tracking-widest">
                                 Menu
                             </p>
                             <button
@@ -69,10 +68,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                                         to={item.path} 
                                         onClick={() => setIsSidebarOpen(false)}
                                         className={`group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-                                            ${active ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" : "text-slate-400 hover:bg-blue-500 hover:text-white"}`}>
+                                            ${active ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" : "text-slate-600 hover:bg-blue-500 hover:text-white"}`}>
                                        
                                         <div className="flex items-center gap-3">
-                                            <Icon className={`w-5 h-5 ${active ? "text-white" : "group-hover:text-blue-400 transition-colors"}`} />
+                                            <Icon className={`w-5 h-5 ${active ? "text-white" : "group-hover:text-gray-200 transition-colors"}`} />
                                             {item.name}
                                         </div>
 
@@ -88,8 +87,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
                                 BM
                             </div>
-                            <div className="overflow-hidden">
-                                <p className="text-sm font-medium text-white-600 truncate">Bruno Matias</p>
+                            <div className="overflow-hidden"> 
+                                <a target="_blank" href="https://github.com/brunomaatias" 
+                                className="text-sm font-medium text-white-600 truncate no-underline hover:underline">
+                                Bruno Matias
+                                </a>
                                 <p className="text-xs text-slate-800">Developer</p>
                             </div>
                         </div>
