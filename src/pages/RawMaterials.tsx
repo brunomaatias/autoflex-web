@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { RawMaterialsForm } from "../components/RawMaterialsForm";
-import type { RawMaterial } from "../types/RawMaterial"; 
-import { getRawMaterials } from "../services/rawMaterialService";
+import type { RawMaterial } from "../types/RawMaterial";
+import { getRawMaterials, getRawMaterialById, updateRawMaterial, deleteRawMaterial } from "../services/rawMaterialService";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function RawMaterials() {
     const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [selectedRawMaterial, setSelectedRawMaterial] = useState<RawMaterial | null>(null);
 
     useEffect(() => {
         fetchRawMaterials();
@@ -24,6 +26,31 @@ export default function RawMaterials() {
         }
     };
 
+    const handleEdit = async (id: number) => {
+        try {
+            const rawMaterial = await getRawMaterialById(id);
+            setSelectedRawMaterial(rawMaterial);
+            setShowForm(true);
+        } catch (err) {
+            alert("Error loading raw material.");
+        }
+    };
+
+    const handleFinishForm = () => {
+        setShowForm(false);
+        setSelectedRawMaterial(null); 
+        fetchRawMaterials(); 
+    };
+
+
+    const handleRemove = async (item: RawMaterial, index: number) => {
+        if (item.rawMaterialId) {
+            await deleteRawMaterial(item.rawMaterialId);
+        }
+
+        setRawMaterials(rawMaterials.filter((_, i) => i !== index));
+    };
+
     if (loading) {
         return <p className="text-gray-600 text-center">Loading...</p>;
     }
@@ -37,14 +64,22 @@ export default function RawMaterials() {
             {showForm ? (
                 <div>
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold mb-4">Create New Raw Material</h2>
+                        <h2>
+                            {selectedRawMaterial ? "Edit Raw Material" : "Create New Raw Material"}
+                        </h2>
                         <button
-                            onClick={() => setShowForm(!showForm)}
+                            onClick={() => {
+                                setShowForm(!showForm);
+                                if (showForm) setSelectedRawMaterial(null);
+                            }}
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
                             {showForm ? "Close" : "New"}
                         </button>
                     </div>
-                    <RawMaterialsForm />
+                    <RawMaterialsForm
+                        rawMaterialToEdit={selectedRawMaterial}
+                        onFinish={handleFinishForm}
+                    />
                 </div>
             ) : (
                 <div>
@@ -64,6 +99,7 @@ export default function RawMaterials() {
                                     <th className="px-4 py-3 text-center">Code</th>
                                     <th className="px-4 py-3 text-center">Name</th>
                                     <th className="px-4 py-3 text-center">Stock Quantity</th>
+                                    <th className="px-4 py-3 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +111,20 @@ export default function RawMaterials() {
                                         <td className="px-4 py-3">{rawMaterial.name}</td>
                                         <td className="px-4 py-3 font-medium">
                                             {rawMaterial.stockQuantity}
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            <button
+                                                onClick={() => handleEdit(rawMaterial.rawMaterialId!)}
+                                                className="text-yellow-600 pr-3">
+                                                <Pencil className="w-5 h-5" />
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemove(rawMaterial, rawMaterials.indexOf(rawMaterial))}
+                                                className="text-red-600">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

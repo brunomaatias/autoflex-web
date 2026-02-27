@@ -1,13 +1,32 @@
-import { useState } from "react";
-import type { RawMaterial } from "../types/RawMaterial"; 
-import { postRawMaterial } from "../services/rawMaterialService";
+import { useState, useEffect } from "react";
+import type { RawMaterial } from "../types/RawMaterial";
+import { postRawMaterial, updateRawMaterial } from "../services/rawMaterialService";
 
-export function RawMaterialsForm() {
+type Props = {
+  rawMaterialToEdit?: RawMaterial | null;
+  onFinish?: () => void;
+};
+
+export function RawMaterialsForm({ rawMaterialToEdit, onFinish }: Props) {
+  const isEditMode = !!rawMaterialToEdit;
+
   const [formData, setFormData] = useState<RawMaterial>({
     code: "",
     name: "",
     stockQuantity: 0,
   });
+
+  useEffect(() => {
+    if (rawMaterialToEdit) {
+      setFormData(rawMaterialToEdit);
+    } else {
+      setFormData({
+        code: "",
+        name: "",
+        stockQuantity: 0,
+      });
+    }
+  }, [rawMaterialToEdit]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -24,18 +43,30 @@ export function RawMaterialsForm() {
     e.preventDefault();
 
     try {
-      await postRawMaterial(formData);
+      if (isEditMode) {
+        await updateRawMaterial(formData);
 
-      alert("Raw Material created successfully.");
+        alert("Raw Material updated successfully.");
+      } else {
+        await postRawMaterial(formData);
 
-      setFormData({
-        code: "",
-        name: "",
-        stockQuantity: 0,
-      });
+        alert("Raw Material created successfully.");
+      }
+
+      if (onFinish) {
+        onFinish();
+      } else {
+        setFormData({
+          rawMaterialId: 0,
+          code: "",
+          name: "",
+          stockQuantity: 0,
+        });
+      }
+
     } catch (error) {
       console.error(error);
-      alert("Error creating Raw Material");
+      alert("Error saving Raw Material: " + error);
     }
   };
 
@@ -45,32 +76,45 @@ export function RawMaterialsForm() {
       className="bg-white rounded-lg w-full">
 
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <input 
-          type="text"
-          name="code"
-          placeholder="Code"
-          value={formData.code}
-          onChange={handleChange}
-          className="p-2 border rounded w-full"
-          required />
+        <div className="flex flex-col">
+          <label htmlFor="code" className="mb-1 text-sm font-semibold text-gray-700">
+            Code
+          </label>
+          <input
+            type="text"
+            name="code"
+            value={formData.code}
+            onChange={handleChange}
+            className="p-2 border rounded w-full"
+            required />
+        </div>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="p-2 border rounded w-full"
-          required />
+        <div className="flex flex-col">
+          <label htmlFor="name" className="mb-1 text-sm font-semibold text-gray-700">
+            Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="p-2 border rounded w-full"
+            required />
+        </div>
 
-        <input
-          type="number"
-          name="stockQuantity"
-          placeholder="Stock Quantity"
-          value={formData.stockQuantity}
-          onChange={handleChange}
-          className="p-2 border rounded w-full"
-          required />
+        <div className="flex flex-col">
+          <label htmlFor="stockQuantity" className="mb-1 text-sm font-semibold text-gray-700">
+            Stock Quantity
+          </label>
+          <input
+            type="number"
+            name="stockQuantity"
+            placeholder="Stock Quantity"
+            value={formData.stockQuantity}
+            onChange={handleChange}
+            className="p-2 border rounded w-full"
+            required />
+        </div>
       </div>
 
       <div className="flex justify-end">
