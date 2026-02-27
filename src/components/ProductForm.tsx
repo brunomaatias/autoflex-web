@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../types/Product";
-import { postProduct } from "../services/productService";
+import { postProduct, updateProduct } from "../services/productService";
 import { getRawMaterials } from "../services/rawMaterialService";
 import type { RawMaterial } from "../types/RawMaterial";
-import { postProductRawMaterials } from "../services/productRawMaterialService";
+import { getProductRawMateralsByIdProduct, postProductRawMaterials, deleteProductRawMaterialsById, updateProductRawMaterials } from "../services/productRawMaterialService";
 import { Trash2 } from "lucide-react";
 
-export function ProductForm() { 
+type Props = {
+  productToEdit?: Product | null;
+  onFinish?: () => void;
+};
+
+export function ProductForm({ productToEdit, onFinish }: Props) {
   const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
   const [productRawMaterials, setProductRawMaterials] = useState<ProductRawMaterialInput[]>([]);
   const [selectedProductRawMaterialId, setSelectedProductRawMaterialId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const isEditMode = !!productToEdit; 
 
   const [formData, setFormData] = useState<Product>({
     code: "",
@@ -19,19 +25,35 @@ export function ProductForm() {
   });
 
   type ProductRawMaterialInput = {
+    productRawMaterialId?: number;
     rawMaterialId: number;
     requiredQuantity: number;
   };
 
+  useEffect(() => {
+    if (productToEdit) {
+      setFormData(productToEdit);
+      fetchProductRawMaterials();
+    }
+  }, [productToEdit]);
 
   useEffect(() => {
     fetchRawMaterials();
-  }, []);
+  }, [productToEdit]);
 
   const fetchRawMaterials = async () => {
     try {
       const data = await getRawMaterials();
       setRawMaterials(data);
+    } catch (err) {
+      alert("No Raw Materials Created. Create at least one to continue.")
+    }
+  };
+
+  const fetchProductRawMaterials = async () => {
+    try {
+      const data = await getProductRawMateralsByIdProduct(productToEdit!.productId!);
+      setProductRawMaterials(data);
     } catch (err) {
       alert("No Raw Materials Created. Create at least one to continue.")
     }
@@ -67,27 +89,48 @@ export function ProductForm() {
     e.preventDefault();
 
     try {
-      const productCreated = await postProduct(formData);
+      if (isEditMode) {
+        await updateProduct(productToEdit!.code, formData);
 
-      alert("Product created successfully.");
+        for (const material of productRawMaterials) {
+          if (!material.productRawMaterialId) {
+            await postProductRawMaterials({
+              productId: productToEdit!.productId!,
+              rawMaterialId: material.rawMaterialId,
+              requiredQuantity: material.requiredQuantity
+            });
+          }
+        }
 
-      setFormData({
-        code: "",
-        name: "",
-        price: 0,
-      });
+        alert("Product updated successfully.");
 
-      for (const material of productRawMaterials) {
-        await postProductRawMaterials({
-          productId: productCreated.productId,
-          rawMaterialId: material.rawMaterialId,
-          requiredQuantity: material.requiredQuantity
-        });
+      } else {
+        const productCreated = await postProduct(formData);
+
+        for (const material of productRawMaterials) {
+          await postProductRawMaterials({
+            productId: productCreated.productId!,
+            rawMaterialId: material.rawMaterialId,
+            requiredQuantity: material.requiredQuantity
+          });
+        }
+
+        alert("Product created successfully.");
       }
+
+      onFinish?.();
+
     } catch (error) {
-      console.error(error);
-      alert("Error creating product" + error);
+      alert("Error saving product: " + error);
     }
+  };
+
+  const handleRemove = async (item: ProductRawMaterialInput, index: number) => {
+    if (item.productRawMaterialId) {
+      await deleteProductRawMaterialsById(item.productRawMaterialId);
+    }
+
+    setProductRawMaterials(productRawMaterials.filter((_, i) => i !== index));
   };
 
   return (
@@ -195,12 +238,10 @@ export function ProductForm() {
                 <tr key={index} className="border-t">
                   <td className="px-4 py-2">{material?.name}</td>
                   <td className="px-4 py-2">{item.requiredQuantity}</td>
-                  <td className="px-4 py-2 text-right"> 
+                  <td className="px-4 py-2 text-right">
                     <button
                       type="button"
-                      onClick={() =>
-                        setProductRawMaterials(productRawMaterials.filter((_, i) => i !== index))
-                      }
+                      onClick={() => handleRemove(item, index)}
                       className="text-red-600">
                       <Trash2 className="w-5 h-5" />
                     </button>

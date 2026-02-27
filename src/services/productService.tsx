@@ -7,11 +7,25 @@ export const getProducts = async (): Promise<Product[]> => {
 };
 
 export const postProduct = async (product: Product): Promise<Product> => {
-  const response = await api.post<Product>("/products", product );
-  return response.data; 
+  const response = await api.post<Product>("/products", product);
+  return response.data;
 };
 
 export const getSuggestProductsProdution = async (): Promise<ProductionSuggestion[]> => {
   const response = await api.get<ProductionSuggestion[]>("/products/production-plan");
+  return response.data;
+};
+
+export const getProductByCode = async (code: string): Promise<Product | null> => {
+  try {
+    const response = await api.get<Product>(`/products/${code}`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const updateProduct = async (code: string, product: Product): Promise<Product> => {
+  const response = await api.put<Product>(`/products/${code}`, product);
   return response.data;
 };

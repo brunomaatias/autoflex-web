@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../services/productService";
+import { getProductByCode, getProducts } from "../services/productService";
 import type { Product } from "../types/Product";
 import { ProductForm } from "../components/ProductForm";
+import { Pencil } from "lucide-react";
 
 export default function Products() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     useEffect(() => {
         fetchProducts();
@@ -24,6 +26,16 @@ export default function Products() {
         }
     };
 
+    const handleEdit = async (code: string) => {
+        try {
+            const product = await getProductByCode(code);
+            setSelectedProduct(product);
+            setShowForm(true);
+        } catch (err) {
+            alert("Error loading product.");
+        }
+    };
+
     if (loading) {
         return <p className="text-gray-600 text-center">Loading...</p>;
     }
@@ -37,14 +49,23 @@ export default function Products() {
             {showForm ? (
                 <div>
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold mb-4">Create New Product</h2>
+                        <h2>
+                            {selectedProduct ? "Edit Product" : "Create New Product"}
+                        </h2>
                         <button
                             onClick={() => setShowForm(!showForm)}
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
                             {showForm ? "Close" : "New"}
                         </button>
                     </div>
-                    <ProductForm />
+                    <ProductForm
+                        productToEdit={selectedProduct}
+                        onFinish={() => {
+                            setShowForm(false);
+                            setSelectedProduct(null);
+                            fetchProducts();
+                        }}
+                    />
                 </div>
             ) : (
                 <div>
@@ -64,6 +85,7 @@ export default function Products() {
                                     <th className="px-4 py-3 text-center">Code</th>
                                     <th className="px-4 py-3 text-center">Name</th>
                                     <th className="px-4 py-3 text-center">Price</th>
+                                    <th className="px-4 py-3 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,7 +94,14 @@ export default function Products() {
                                         <td className="px-4 py-3 text-center">{product.code}</td>
                                         <td className="px-4 py-3 text-center">{product.name}</td>
                                         <td className="px-4 py-3 font-medium text-green-600 text-center">
-                                            $ {product.price}
+                                            ${product.price}
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            <button
+                                                onClick={() => handleEdit(product.code)}
+                                                className="text-yellow-600">
+                                                <Pencil className="w-5 h-5" />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
