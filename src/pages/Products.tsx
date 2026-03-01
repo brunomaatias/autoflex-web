@@ -110,7 +110,10 @@ export default function Products() {
                                         <td className="px-4 py-3 text-center">{product.code}</td>
                                         <td className="px-4 py-3 text-center">{product.name}</td>
                                         <td className="px-4 py-3 font-medium text-green-600 text-center">
-                                            ${product.price}
+                                            {product.price.toLocaleString("en-US", {
+                                                style: "currency",
+                                                currency: "USD"
+                                            })}
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <button
