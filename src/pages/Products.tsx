@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getProductByCode, getProducts } from "../services/productService";
+import { getProductByCode, getProducts, deleteProduct } from "../services/productService";
 import type { Product } from "../types/Product";
 import { ProductForm } from "../components/ProductForm";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function Products() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -33,6 +33,22 @@ export default function Products() {
             setShowForm(true);
         } catch (err) {
             alert("Error loading product.");
+        }
+    };
+
+    const handleRemove = async (item: Product, index: number) => {
+        const confirmDelete = window.confirm(`Are you sure you want to delete ${item.name}?`);
+        if (!confirmDelete) return;
+
+        try {
+            if (item.productId) {
+                await deleteProduct(item.productId);
+            }
+            setProducts(products.filter((_, i) => i !== index));
+
+        } catch (err: any) {
+            alert(`Cannot delete ${item.name}. It is currently associated with one or more raw materials.`);
+            console.error("Error deleting product:", err);
         }
     };
 
@@ -99,8 +115,15 @@ export default function Products() {
                                         <td className="px-4 py-3 text-center">
                                             <button
                                                 onClick={() => handleEdit(product.code)}
-                                                className="text-yellow-600">
+                                                className="text-yellow-600 pr-3">
                                                 <Pencil className="w-5 h-5" />
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemove(product, products.indexOf(product))}
+                                                className="text-red-600">
+                                                <Trash2 className="w-5 h-5" />
                                             </button>
                                         </td>
                                     </tr>

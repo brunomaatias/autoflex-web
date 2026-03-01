@@ -29,3 +29,7 @@ export const updateProduct = async (code: string, product: Product): Promise<Pro
   const response = await api.put<Product>(`/products/${code}`, product);
   return response.data;
 };
+
+export const deleteProduct = async (id: number): Promise<void> => {
+  await api.delete(`/products/${id}`);
+};
