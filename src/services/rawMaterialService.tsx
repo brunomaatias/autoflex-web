@@ -21,6 +21,6 @@ export const updateRawMaterial = async (rawMaterial: RawMaterial): Promise<RawMa
   return response.data;
 };
 
-export const deleteRawMaterial = async (id: number,): Promise<void> => {
+export const deleteRawMaterial = async (id: number): Promise<void> => {
   await api.delete(`/raw-materials/${id}`);
 };

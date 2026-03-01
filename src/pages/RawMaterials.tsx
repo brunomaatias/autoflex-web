@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RawMaterialsForm } from "../components/RawMaterialsForm";
 import type { RawMaterial } from "../types/RawMaterial";
-import { getRawMaterials, getRawMaterialById, updateRawMaterial, deleteRawMaterial } from "../services/rawMaterialService";
+import { getRawMaterials, getRawMaterialById, deleteRawMaterial } from "../services/rawMaterialService";
 import { Pencil, Trash2 } from "lucide-react";
 
 export default function RawMaterials() {
@@ -38,17 +38,25 @@ export default function RawMaterials() {
 
     const handleFinishForm = () => {
         setShowForm(false);
-        setSelectedRawMaterial(null); 
-        fetchRawMaterials(); 
+        setSelectedRawMaterial(null);
+        fetchRawMaterials();
     };
 
 
     const handleRemove = async (item: RawMaterial, index: number) => {
-        if (item.rawMaterialId) {
-            await deleteRawMaterial(item.rawMaterialId);
-        }
+        const confirmDelete = window.confirm(`Are you sure you want to delete ${item.name}?`);
+        if (!confirmDelete) return;
 
-        setRawMaterials(rawMaterials.filter((_, i) => i !== index));
+        try {
+            if (item.rawMaterialId) {
+                await deleteRawMaterial(item.rawMaterialId);
+            }
+            setRawMaterials(rawMaterials.filter((_, i) => i !== index));
+
+        } catch (err: any) {
+            alert(`Cannot delete ${item.name}. It is currently associated with one or more products.`);
+            console.error("Error deleting raw material:", err);
+        }
     };
 
     if (loading) {
