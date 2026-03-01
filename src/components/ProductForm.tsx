@@ -143,13 +143,13 @@ export function ProductForm({ productToEdit, onFinish }: Props) {
           <label htmlFor="Code" className="mb-1 text-sm font-semibold text-gray-700">
             Code
           </label>
-          <input
+          <input readOnly
             type="text"
             name="code"
             value={formData.code}
             onChange={handleChange}
             className="p-2 border rounded w-full"
-            required />
+            />
         </div>
 
         <div className="flex flex-col">
@@ -183,11 +183,11 @@ export function ProductForm({ productToEdit, onFinish }: Props) {
             <label htmlFor="Raw Material" className="mb-1 text-sm font-semibold text-gray-700">
               Raw Material
             </label>
-            <select
+            <select required
               className="p-2 border rounded"
               value={selectedProductRawMaterialId ?? ""}
-              onChange={(e) => setSelectedProductRawMaterialId(Number(e.target.value))}
-            >
+              onChange={(e) => setSelectedProductRawMaterialId(Number(e.target.value))}>
+
               <option value="">Select...</option>
               {rawMaterials.map((rm) => (
                 <option key={rm.rawMaterialId} value={rm.rawMaterialId}>
