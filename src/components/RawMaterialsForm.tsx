@@ -81,12 +81,12 @@ export function RawMaterialsForm({ rawMaterialToEdit, onFinish }: Props) {
             Code
           </label>
           <input
+            readOnly
             type="text"
             name="code"
             value={formData.code}
             onChange={handleChange}
-            className="p-2 border rounded w-full"
-            required />
+            className="p-2 border rounded w-full" />
         </div>
 
         <div className="flex flex-col">

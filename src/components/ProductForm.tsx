@@ -3,7 +3,7 @@ import type { Product } from "../types/Product";
 import { postProduct, updateProduct } from "../services/productService";
 import { getRawMaterials } from "../services/rawMaterialService";
 import type { RawMaterial } from "../types/RawMaterial";
-import { getProductRawMateralsByIdProduct, postProductRawMaterials, deleteProductRawMaterialsById, updateProductRawMaterials } from "../services/productRawMaterialService";
+import { getProductRawMateralsByIdProduct, postProductRawMaterials, deleteProductRawMaterialsById } from "../services/productRawMaterialService";
 import { Trash2 } from "lucide-react";
 
 type Props = {
