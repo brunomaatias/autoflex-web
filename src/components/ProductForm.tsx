@@ -16,7 +16,7 @@ export function ProductForm({ productToEdit, onFinish }: Props) {
   const [productRawMaterials, setProductRawMaterials] = useState<ProductRawMaterialInput[]>([]);
   const [selectedProductRawMaterialId, setSelectedProductRawMaterialId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const isEditMode = !!productToEdit; 
+  const isEditMode = !!productToEdit;
 
   const [formData, setFormData] = useState<Product>({
     code: "",
@@ -134,124 +134,96 @@ export function ProductForm({ productToEdit, onFinish }: Props) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white  rounded-lg w-full">
-
-      <div className="grid grid-cols-3 gap-4 mb-4">
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="flex flex-col">
-          <label htmlFor="Code" className="mb-1 text-sm font-semibold text-gray-700">
-            Code
-          </label>
-          <input readOnly
-            type="text"
-            name="code"
-            value={formData.code}
-            onChange={handleChange}
-            className="p-2 border rounded w-full"
-            />
+          <label className="mb-1 text-sm font-semibold text-gray-700">Code</label>
+          <input readOnly type="text" name="code" value={formData.code} placeholder="Generated Automatically" className="p-2 border rounded bg-gray-50" />
         </div>
-
         <div className="flex flex-col">
-          <label htmlFor="Name" className="mb-1 text-sm font-semibold text-gray-700">
-            Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="p-2 border rounded w-full"
-            required />
+          <label className="mb-1 text-sm font-semibold text-gray-700">Name</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} className="p-2 border rounded" required />
         </div>
-
         <div className="flex flex-col">
-          <label htmlFor="price" className="mb-1 text-sm font-semibold text-gray-700">
-            Price
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="p-2 border rounded w-full"
-            required />
-        </div>
-
-        <div className="grid grid-cols-3 gap-4 items-end">
-          <div className="flex flex-col">
-            <label htmlFor="Raw Material" className="mb-1 text-sm font-semibold text-gray-700">
-              Raw Material
-            </label>
-            <select required
-              className="p-2 border rounded"
-              value={selectedProductRawMaterialId ?? ""}
-              onChange={(e) => setSelectedProductRawMaterialId(Number(e.target.value))}>
-
-              <option value="">Select...</option>
-              {rawMaterials.map((rm) => (
-                <option key={rm.rawMaterialId} value={rm.rawMaterialId}>
-                  {rm.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="Required Quantity" className="mb-1 text-sm font-semibold text-gray-700">
-              Required Quantity
-            </label>
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={handleAddMaterial}
-            className="bg-gray-700 text-white px-4 py-2 rounded">
-            Add
-          </button>
+          <label className="mb-1 text-sm font-semibold text-gray-700">Price</label>
+          <input type="number" name="price" value={formData.price} onChange={handleChange} className="p-2 border rounded" required />
         </div>
       </div>
 
-      {productRawMaterials.length > 0 && (
-        <table className="min-w-full mt-4 border">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left">Material</th>
-              <th className="px-4 py-2 text-left">Quantity</th>
-              <th className="px-4 py-2 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productRawMaterials.map((item, index) => {
-              const material = rawMaterials.find(
-                (rm) => rm.rawMaterialId === item.rawMaterialId
-              );
+      <div className="grid grid-cols-1 gap-4 items-end">
+        <div className="flex flex-col">
+          <label htmlFor="Raw Material" className="mb-1 text-sm font-semibold text-gray-700">
+            Raw Material
+          </label>
+          <select required
+            className="p-2 border rounded"
+            value={selectedProductRawMaterialId ?? ""}
+            onChange={(e) => setSelectedProductRawMaterialId(Number(e.target.value))}>
 
-              return (
-                <tr key={index} className="border-t">
-                  <td className="px-4 py-2">{material?.name}</td>
-                  <td className="px-4 py-2">{item.requiredQuantity}</td>
-                  <td className="px-4 py-2 text-right">
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(item, index)}
-                      className="text-red-600">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+            <option value="">Select...</option>
+            {rawMaterials.map((rm) => (
+              <option key={rm.rawMaterialId} value={rm.rawMaterialId}>
+                {rm.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="Required Quantity" className="mb-1 text-sm font-semibold text-gray-700">
+            Required Quantity
+          </label>
+          <input
+            type="number"
+            min={1} 
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            className="p-2 border rounded"
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAddMaterial}
+          className="bg-gray-700 text-white px-4 py-2 rounded">
+          Add
+        </button>
+      </div>
+      {
+        productRawMaterials.length > 0 && (
+          <table className="min-w-full mt-4 border">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left">Material</th>
+                <th className="px-4 py-2 text-left">Quantity</th>
+                <th className="px-4 py-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productRawMaterials.map((item, index) => {
+                const material = rawMaterials.find(
+                  (rm) => rm.rawMaterialId === item.rawMaterialId
+                );
+
+                return (
+                  <tr key={index} className="border-t">
+                    <td className="px-4 py-2">{material?.name}</td>
+                    <td className="px-4 py-2">{item.requiredQuantity}</td>
+                    <td className="px-4 py-2 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(item, index)}
+                        className="text-red-600">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )
+      }
 
       <div className="flex justify-end pt-3">
         <button
@@ -260,6 +232,6 @@ export function ProductForm({ productToEdit, onFinish }: Props) {
           Save
         </button>
       </div>
-    </form>
+    </form >
   );
 } 

@@ -75,7 +75,7 @@ export function RawMaterialsForm({ rawMaterialToEdit, onFinish }: Props) {
       onSubmit={handleSubmit}
       className="bg-white rounded-lg w-full">
 
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="flex flex-col">
           <label htmlFor="code" className="mb-1 text-sm font-semibold text-gray-700">
             Code
@@ -84,9 +84,10 @@ export function RawMaterialsForm({ rawMaterialToEdit, onFinish }: Props) {
             readOnly
             type="text"
             name="code"
+            placeholder="Generated Automatically"
             value={formData.code}
             onChange={handleChange}
-            className="p-2 border rounded w-full" />
+            className="p-2 border rounded w-full bg-gray-50" />
         </div>
 
         <div className="flex flex-col">

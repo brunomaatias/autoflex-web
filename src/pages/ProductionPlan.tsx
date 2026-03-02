@@ -37,40 +37,42 @@ export default function ProductionPlan() {
                     <h2 className="text-2xl font-bold">Production Plans</h2>
                 </div>
                 <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-                    <table className="min-w-full text-center">
-                        <thead className="bg-blue-600 text-white">
-                            <tr>
-                                <th className="px-4 py-3">Product</th>
-                                <th className="px-4 py-3">Unit Price</th>
-                                <th className="px-4 py-3">Quantity Possible</th>
-                                <th className="px-4 py-3">Total Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productionSuggestions.map((item) => (
-                                <tr key={item.productId} className="border-b hover:bg-gray-50">
-                                    <td className="px-4 py-3">{item.productName}</td>
-                                    <td className="px-4 py-3 text-green-600">{item.unitPrice.toLocaleString("en-US", {
-                                        style: "currency",
-                                        currency: "USD"
-                                    })}</td>
-                                    <td className="px-4 py-3">{item.quantityPossible}</td>
-                                    <td className="px-4 py-3 font-semibold text-green-600">
-                                        {item.totalValue.toLocaleString("en-US", {
-                                        style: "currency",
-                                        currency: "USD"
-                                    })}</td>
-                                </tr>
-                            ))}
-                            {productionSuggestions.length === 0 && (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-center">
+                            <thead className="bg-blue-600 text-white">
                                 <tr>
-                                    <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
-                                        No data available
-                                    </td>
+                                    <th className="px-4 py-3">Product</th>
+                                    <th className="px-4 py-3">Unit Price</th>
+                                    <th className="px-4 py-3">Quantity Possible</th>
+                                    <th className="px-4 py-3">Total Value</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {productionSuggestions.map((item) => (
+                                    <tr key={item.productId} className="border-b hover:bg-gray-50">
+                                        <td className="px-4 py-3">{item.productName}</td>
+                                        <td className="px-4 py-3 text-green-600">{item.unitPrice.toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "USD"
+                                        })}</td>
+                                        <td className="px-4 py-3">{item.quantityPossible}</td>
+                                        <td className="px-4 py-3 font-semibold text-green-600">
+                                            {item.totalValue.toLocaleString("en-US", {
+                                                style: "currency",
+                                                currency: "USD"
+                                            })}</td>
+                                    </tr>
+                                ))}
+                                {productionSuggestions.length === 0 && (
+                                    <tr>
+                                        <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
+                                            No data available
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

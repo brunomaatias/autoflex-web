@@ -91,60 +91,64 @@ export default function RawMaterials() {
                 </div>
             ) : (
                 <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold">Raw Materials</h2>
+                    <div className="bg-white p-2 md:p-2">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <h2 className="text-2xl font-bold">Raw Materials</h2>
 
-                        <button
-                            onClick={() => setShowForm(!showForm)}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                            {showForm ? "Close" : "New"}
-                        </button>
+                            <button
+                                onClick={() => setShowForm(!showForm)}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                {showForm ? "Close" : "New"}
+                            </button>
+                        </div>
                     </div>
                     <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-                        <table className="min-w-full text-center">
-                            <thead className="bg-blue-600 text-white">
-                                <tr>
-                                    <th className="px-4 py-3 text-center">Code</th>
-                                    <th className="px-4 py-3 text-center">Name</th>
-                                    <th className="px-4 py-3 text-center">Stock Quantity</th>
-                                    <th className="px-4 py-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rawMaterials.map((rawMaterial) => (
-                                    <tr
-                                        key={rawMaterial.code}
-                                        className="border-b hover:bg-gray-50 transition">
-                                        <td className="px-4 py-3">{rawMaterial.code}</td>
-                                        <td className="px-4 py-3">{rawMaterial.name}</td>
-                                        <td className="px-4 py-3 font-medium">
-                                            {rawMaterial.stockQuantity}
-                                        </td>
-                                        <td className="px-4 py-3 text-center">
-                                            <button
-                                                onClick={() => handleEdit(rawMaterial.rawMaterialId!)}
-                                                className="text-yellow-600 pr-3">
-                                                <Pencil className="w-5 h-5" />
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemove(rawMaterial, rawMaterials.indexOf(rawMaterial))}
-                                                className="text-red-600">
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {rawMaterials.length === 0 && (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-center">
+                                <thead className="bg-blue-600 text-white">
                                     <tr>
-                                        <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
-                                            No data available
-                                        </td>
+                                        <th className="px-4 py-3 text-center">Code</th>
+                                        <th className="px-4 py-3 text-center">Name</th>
+                                        <th className="px-4 py-3 text-center">Stock Quantity</th>
+                                        <th className="px-4 py-3 text-center">Action</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {rawMaterials.map((rawMaterial) => (
+                                        <tr
+                                            key={rawMaterial.code}
+                                            className="border-b hover:bg-gray-50 transition">
+                                            <td className="px-4 py-3">{rawMaterial.code}</td>
+                                            <td className="px-4 py-3">{rawMaterial.name}</td>
+                                            <td className="px-4 py-3 font-medium">
+                                                {rawMaterial.stockQuantity}
+                                            </td>
+                                            <td className="px-4 py-3 text-center">
+                                                <button
+                                                    onClick={() => handleEdit(rawMaterial.rawMaterialId!)}
+                                                    className="text-yellow-600 pr-3">
+                                                    <Pencil className="w-5 h-5" />
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemove(rawMaterial, rawMaterials.indexOf(rawMaterial))}
+                                                    className="text-red-600">
+                                                    <Trash2 className="w-5 h-5" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {rawMaterials.length === 0 && (
+                                        <tr>
+                                            <td colSpan={3} className="px-4 py-3 text-center text-gray-500">
+                                                No data available
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             )}
