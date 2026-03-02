@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Package, Droplets, Factory, LayoutDashboard, ChevronRight, Menu, X } from "lucide-react";
+import { Package, Droplets, Factory, LayoutDashboard, ChevronRight, Menu, X, Github } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     const location = useLocation();
@@ -24,6 +24,25 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     <h1 className="text-xl font-extrabold tracking-tight text-slate-800">
                         Auto<span className="text-blue-600">Flex</span>
                     </h1>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <a href="https://github.com/brunomaatias/autoflex-web"
+                        target="_blank" rel="noopener noreferrer" title="FrontEnd Source Code"
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-green-600 hover:bg-blue-50 rounded-lg transition-all duration-200">
+                        <Github className="w-5 h-5" />
+                    </a>
+
+                    <a href="https://github.com/brunomaatias/autoflex-api"
+                        target="_blank" rel="noopener noreferrer" title="BackEnd Source Code"
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-blue-50 rounded-lg transition-all duration-200">
+                        <Github className="w-5 h-5" />
+                    </a>
+
+                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-md transition-colors">
+                        {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    </button>
                 </div>
 
                 <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -65,11 +84,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                                 return (
                                     <Link
                                         key={item.path}
-                                        to={item.path} 
+                                        to={item.path}
                                         onClick={() => setIsSidebarOpen(false)}
                                         className={`group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
                                             ${active ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" : "text-slate-600 hover:bg-blue-500 hover:text-white"}`}>
-                                       
+
                                         <div className="flex items-center gap-3">
                                             <Icon className={`w-5 h-5 ${active ? "text-white" : "group-hover:text-gray-200 transition-colors"}`} />
                                             {item.name}
@@ -87,10 +106,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
                                 BM
                             </div>
-                            <div className="overflow-hidden"> 
-                                <a target="_blank" href="https://github.com/brunomaatias" 
-                                className="text-sm font-medium text-white-600 truncate no-underline hover:underline">
-                                Bruno Matias
+                            <div className="overflow-hidden">
+                                <a target="_blank" href="https://github.com/brunomaatias"
+                                    className="text-sm font-medium text-white-600 truncate no-underline hover:underline">
+                                    Bruno Matias
                                 </a>
                                 <p className="text-xs text-slate-800">Developer</p>
                             </div>
